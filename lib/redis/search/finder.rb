@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'chinese_pinyin'
+require 'levenshtein'
 class Redis
   module Search
     # use rmmseg to split words
@@ -88,12 +89,13 @@ class Redis
         end
       end
       
-      ids = Redis::Search.config.redis.sort(temp_store_key,
-                                            :limit => [0,limit], 
-                                            :by => Search.mk_score_key(type,"*"),
-                                            :order => "desc")
+      # ids = Redis::Search.config.redis.get(temp_store_key,
+      #                                       :limit => [0,limit], 
+      #                                       :by => Search.mk_score_key(type,"*"),
+      #                                       :order => "desc")
+      ids = Redis::Search.config.redis.smembers(temp_store_key)
       return [] if ids.blank?
-      hmget(type,ids)
+      hmget(type,ids, w, limit)
     end
 
     # Search items, this will split words by Libmmseg
@@ -164,11 +166,12 @@ class Redis
       end
       
       # 根据需要的数量取出 ids
-      ids = Search.config.redis.sort(temp_store_key,
-                                            :limit => [0,limit], 
-                                            :by => Search.mk_score_key(type,"*"),
-                                            :order => "desc")
-      result = hmget(type,ids, :sort_field => sort_field)
+      # ids = Search.config.redis.sort(temp_store_key,
+#                                             :limit => [0,limit], 
+#                                             :by => Search.mk_score_key(type,"*"),
+#                                             :order => "desc")
+      ids = Redis::Search.config.redis.smembers(temp_store_key)                                      
+      result = hmget(type,ids, text, limit)
       Search.info("{#{type} : \"#{text}\"} | Time spend: #{Time.now - tm}s")
       result 
     end
@@ -231,18 +234,25 @@ class Redis
         "Compl#{type}"
       end
       
-      def self.hmget(type, ids, options = {})
+      def self.hmget(type, ids, search_text, limit)
+        ids = ids[0,50]
         result = []
-        sort_field = options[:sort_field] || "id"
         return result if ids.blank?
         Redis::Search.config.redis.hmget(type,*ids).each do |r|
           begin
-            result << JSON.parse(r) if !r.blank?
+            if !r.blank?
+              j = JSON.parse(r)
+              result << { :item => j, :score => Levenshtein.distance(j["title"],search_text) }
+            end
           rescue => e
             Search.warn("Search.query failed: #{e}")
           end
         end
-        result
+        return [] if result.blank?
+        
+        result.sort! { |a, b| a[:score] <=> b[:score] }
+        result.collect! { |r| r[:item] }
+        result[0,limit]
       end
   end
 end

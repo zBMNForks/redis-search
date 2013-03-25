@@ -106,8 +106,8 @@ describe "Redis::Search Finders" do
 
     it "does can return right order" do
       items = Redis::Search.complete("User","z")
-      items[0]['id'].should == @user4.id.to_s
-      items[1]['id'].should == @user5.id.to_s
+      items[0]['id'].should == @user5.id.to_s
+      items[1]['id'].should == @user4.id.to_s
       items[2]['id'].should == @user1.id.to_s
     end
 

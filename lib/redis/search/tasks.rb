@@ -21,11 +21,15 @@ namespace :redis_search do
           end
         end
       elsif klass.included_modules.collect { |m| m.to_s }.include?("Mongoid::Document")
+        total = klass.count
+        
         klass.all.each do |item|
           item.redis_search_index_create
     			item = nil
     			count += 1
-          print "."
+          precent_per = 100.00 * (count / (total * 1.00))
+          print ("=" * precent_per.to_i).ljust(105) + " [#{count} / #{total}]               \r"
+          $stdout.flush
         end
       else
         puts "skiped, not support this ORM in current."
