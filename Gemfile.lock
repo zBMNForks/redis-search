@@ -49,7 +49,6 @@ GEM
     redis (2.2.2)
     redis-namespace (1.0.3)
       redis (< 3.0.0)
-    rmmseg-cpp-huacnlee (0.2.9)
     rspec (2.6.0)
       rspec-core (~> 2.6.0)
       rspec-expectations (~> 2.6.0)
@@ -70,8 +69,5 @@ DEPENDENCIES
   mocha
   mongoid!
   rake
-  redis
-  redis-namespace
   redis-search!
-  rmmseg-cpp-huacnlee
   rspec

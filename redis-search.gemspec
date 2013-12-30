@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# coding: utf-8
 Gem::Specification.new do |s|
   s.name        = "redis-search"
   s.version     = "1.0.0"
