@@ -37,8 +37,7 @@ And there is an  [Example App](https://github.com/huacnlee/redis-search-example)
 1. In Rails application Gemfile
 
     ```ruby
-    gem 'chinese_pinyin', '0.4.1'
-    gem 'rmmseg-cpp-huacnlee', '0.2.9'
+    gem 'ruby-pinyin', '0.3.0'
     gem 'redis-search', '0.9.0'
     ```
 
@@ -102,13 +101,13 @@ And there is an  [Example App](https://github.com/huacnlee/redis-search-example)
       include Redis::Search
 
       field :name
-	    field :alias_names, :type => Array
+      field :alias_names, :type => Array
       field :tagline
       field :email
       field :followers_count
 
       redis_search_index(:title_field => :name,
-		                 :alias_field => :alias_names,
+                         :alias_field => :alias_names,
                          :prefix_index_enable => true,
                          :score_field => :followers_count,
                          :ext_fields => [:email,:tagline])
@@ -148,7 +147,6 @@ You can run the rake command (see Rakefile) to make test.
 There is my performance test result.
 
 * [https://gist.github.com/1150933](https://gist.github.com/1150933)
-
 
 ## License
 
