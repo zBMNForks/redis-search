@@ -2,14 +2,6 @@
 
 High performance real-time search (Support Chinese), index in Redis for Rails application
 
-[中文介绍和使用说明](https://github.com/huacnlee/redis-search/wiki/Usage-in-Chinese)
-
-## Demo
-
-![](http://l.ruby-china.org/photo/34368688ee1c1928c2841eb2f41306ec.png)
-
-You can try the search feature in [`IMAX.im`](http://imax.im) | [`shu.im`](http://shu.im)
-
 And there is an  [Example App](https://github.com/huacnlee/redis-search-example) to show you how to use redis-search.
 
 ## Master Status
